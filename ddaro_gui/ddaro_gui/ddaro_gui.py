@@ -201,22 +201,6 @@ class GuideWindow(QMainWindow, SetBackground):
         rclpy.shutdown()
 
 
-# class HelpWindow(QMainWindow, SetBackground):  
-#     def __init__(self):
-#         super(HelpWindow, self).__init__()
-#         loadUi("helpWindow.ui", self)
-#         self.preIndex = 0
-        
-#         # 버튼 기능 설정
-#         self.button.clicked.connect(self.goToPreWindow)
-
-#     def setPreviousIndex(self, index):
-#         self.preIndex = index
-
-#     def goToPreWindow(self):
-#         widget.setCurrentIndex(self.preIndex)
-
-
 class ExitWindow(QDialog, SetBackground):  
     def __init__(self):
         super(ExitWindow, self).__init__()
@@ -245,13 +229,11 @@ def main(args=None):
     cameraWindow = CameraWindow()
     followWindow = FollowWindow()
     guideWindow = GuideWindow()
-    # helpWindow = HelpWindow()
     exitWindow = ExitWindow()
     widget.addWidget(startWindow)
     widget.addWidget(cameraWindow)
     widget.addWidget(followWindow)
     widget.addWidget(guideWindow)
-    # widget.addWidget(helpWindow)
     widget.showFullScreen()
 
     sys.exit(app.exec_())
