@@ -92,28 +92,10 @@ class CameraWindow(QMainWindow, SetBackground):
         widget.setCurrentIndex(2)
 
 
-class ChecklistItem(QWidget):
-    def __init__(self, text, parent=None):
-        super(ChecklistItem, self).__init__(parent)
-        layout = QHBoxLayout()
-        self.checkbox = QCheckBox(text)
-        self.remove_button = QPushButton("Remove")
-        layout.addWidget(self.checkbox)
-        layout.addWidget(self.remove_button)
-        self.setLayout(layout)
-        self.remove_button.clicked.connect(self.remove_item)
-
-    def remove_item(self):
-        self.deleteLater()  # 위젯 삭제
-        self.listWidget.sortItems()
-
-
 class FollowWindow(QMainWindow, SetBackground):  
     def __init__(self):
         super(FollowWindow, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/followWindow.ui", self)
-        self.listWidget.setSelectionMode(QListWidget.NoSelection)
-        self.listWidget.setStyleSheet("QListWidget::item { outline: none; }")
         
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
@@ -134,15 +116,41 @@ class FollowWindow(QMainWindow, SetBackground):
         # 텍스트 입력 필드에서 텍스트 가져오기
         text = self.textEdit.text()
         if text:
+            listFont = QFont("Gmarket Sans TTF", 20)
+
             # 커스텀 위젯 생성
-            customWidget = ChecklistItem(text)
+            layout = QHBoxLayout()
+
+            checkbox = QCheckBox(text)
+            checkbox.setStyleSheet("QCheckBox::indicator { width: 30px; height: 30px; }")  # 체크박스 크기 조정
+            checkbox.setFont(listFont)
+
+            removeButton = QPushButton("X")
+            removeButton.setStyleSheet("background-color: none; border: none; font-size: 20px;")  # 배경과 테두리 없애기
+            removeButton.setFixedSize(30, 30)  # 크기 조절
+
+
+            layout.addWidget(checkbox)
+            layout.addWidget(removeButton)
+
+            customWidget = QWidget()
+            customWidget.setLayout(layout)
+
             # QListWidgetItem에 커스텀 위젯 추가
             item = QListWidgetItem()
             item.setSizeHint(customWidget.sizeHint())
             self.listWidget.addItem(item)
             self.listWidget.setItemWidget(item, customWidget)
+
+            # "Remove" 버튼에 항목 제거 기능 연결
+            removeButton.clicked.connect(lambda _, item=item: self.remove_item(item))
+
             # 텍스트 입력 필드 지우기
             self.textEdit.clear()
+
+    def remove_item(self, item):
+        row = self.listWidget.row(item)
+        self.listWidget.takeItem(row)
 
 
 class GuideWindow(QMainWindow, SetBackground):  
@@ -167,7 +175,6 @@ class GuideWindow(QMainWindow, SetBackground):
         self.fish.clicked.connect(self.go_fish_btn)
         self.meat.clicked.connect(self.go_meat_btn)
         
-
     def goToFollowWindow(self):
         widget.setCurrentIndex(2)
 
