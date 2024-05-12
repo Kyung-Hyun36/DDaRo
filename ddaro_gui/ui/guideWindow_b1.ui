@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>361</width>
       <height>131</height>
      </rect>
@@ -39,17 +39,23 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>180</y>
-      <width>1901</width>
-      <height>771</height>
+      <x>30</x>
+      <y>150</y>
+      <width>1451</width>
+      <height>871</height>
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::WinPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="text">
-     <string>내용 나오는 곳</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../image/mapB1.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -59,7 +65,7 @@
     <property name="geometry">
      <rect>
       <x>1680</x>
-      <y>50</y>
+      <y>43</y>
       <width>201</width>
       <height>71</height>
      </rect>
@@ -87,30 +93,102 @@
    <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
-      <x>1690</x>
+      <x>1720</x>
       <y>980</y>
-      <width>191</width>
+      <width>161</width>
       <height>61</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>exit</string>
+     <string>이용 종료</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>1780</x>
-      <y>77</y>
+      <y>70</y>
       <width>67</width>
       <height>17</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: transparent;</string>
     </property>
     <property name="text">
      <string>따로모드</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>1500</x>
+      <y>150</y>
+      <width>391</width>
+      <height>811</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="lineWidth">
+     <number>3</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>190</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>주차 요금 정산</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>350</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>주차 위치 안내</string>
     </property>
    </widget>
   </widget>

@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>361</width>
       <height>131</height>
      </rect>
@@ -39,17 +39,23 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>180</y>
-      <width>1901</width>
-      <height>771</height>
+      <x>30</x>
+      <y>150</y>
+      <width>1451</width>
+      <height>871</height>
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::WinPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="text">
-     <string>맵 나오는 곳</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../image/map1F.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -59,7 +65,7 @@
     <property name="geometry">
      <rect>
       <x>1680</x>
-      <y>50</y>
+      <y>43</y>
       <width>201</width>
       <height>71</height>
      </rect>
@@ -87,24 +93,35 @@
    <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
-      <x>1690</x>
+      <x>1720</x>
       <y>980</y>
-      <width>191</width>
+      <width>161</width>
       <height>61</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>exit</string>
+     <string>이용 종료</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>1780</x>
-      <y>77</y>
+      <y>70</y>
       <width>67</width>
       <height>17</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: transparent;</string>
@@ -113,30 +130,128 @@
      <string>따로모드</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="fish">
+   <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>210</y>
-      <width>141</width>
-      <height>71</height>
+      <x>1500</x>
+      <y>150</y>
+      <width>391</width>
+      <height>811</height>
      </rect>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::Panel</enum>
+    </property>
+    <property name="lineWidth">
+     <number>3</number>
+    </property>
     <property name="text">
-     <string>수산</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="meat">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1740</x>
-      <y>210</y>
-      <width>131</width>
-      <height>61</height>
+      <x>1550</x>
+      <y>180</y>
+      <width>291</width>
+      <height>111</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>정육</string>
+     <string>수산 코너 안내</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>340</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>정육 코너 안내</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>500</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>야채 코너 안내</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>660</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>다이소 안내</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_5">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>820</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gmarket Sans TTF</family>
+      <pointsize>20</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>계산대 안내</string>
     </property>
    </widget>
   </widget>
