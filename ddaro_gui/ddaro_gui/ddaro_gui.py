@@ -3,13 +3,13 @@ import os
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QTimer, QDateTime, Qt, QLocale, QVariantAnimation, QEasingCurve
+from PyQt5.QtCore import QTimer, QDateTime, Qt, QLocale, QVariantAnimation, QEasingCurve, QEvent
 from PyQt5.QtGui import QFont
 
 import rclpy
 from std_msgs.msg import String
 from ddaro_gui.qt_to_ros import ROSNode
-
+from hangul_utils import join_jamos, split_syllables
 
 class DateTimeLabel(QLabel):
     def __init__(self, parent=None):
@@ -92,6 +92,64 @@ class CameraWindow(QMainWindow, SetBackground):
         widget.setCurrentIndex(2)
 
 
+class KeyboardDialog(QDialog):
+    def __init__(self, lineEdit, parent=None):
+        super().__init__(parent)
+        loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/keyboardWindow.ui", self)
+        self.setWindowTitle("Keyboard")
+        self.setFixedSize(1270, 440)
+        self.lineEdit = lineEdit
+
+        # 각 버튼에 클릭 이벤트를 연결합니다.
+        # self.pushButton.clicked.connect(self.button_clicked)
+        for btn in self.findChildren(QPushButton):
+            btn.clicked.connect(self.addText)
+
+        self.spaceBtn.clicked.disconnect(self.addText)
+        self.spaceBtn.clicked.connect(self.addSpace)
+
+        self.backspaceBtn.clicked.disconnect(self.addText)
+        self.backspaceBtn.clicked.connect(self.backSpace)
+
+        self.enterBtn.clicked.disconnect(self.addText)
+        self.enterBtn.clicked.connect(self.enter)
+
+    def showEvent(self, event):
+        self.textBox.setText(self.lineEdit.text())
+
+    def addText(self):
+        button = self.sender()
+        if button:
+            text = button.text()
+            # 현재 textBox 텍스트를 자음과 모음으로 분리
+            jamo_list = split_syllables(self.textBox.toPlainText())
+            # 분리된 자음과 모음을 버튼의 텍스트를 조합하여 새로운 글자를 생성
+            new_text = join_jamos(jamo_list + text)
+            # 생성된 글자를 textBox 설정
+            self.textBox.setText(new_text)
+    
+    def addSpace(self):
+        # 기존 텍스트에 공백 추가
+        new_text = join_jamos(self.textBox.toPlainText() + " ")
+        # 생성된 글자를 textBox 설정
+        self.textBox.setText(new_text)
+
+    def backSpace(self):
+        # 현재 textBox 텍스트를 자음과 모음으로 분리
+        jamo_list = split_syllables(self.textBox.toPlainText())
+        # 생성된 글자의 마지막 글자 제거
+        new_text = join_jamos(jamo_list[:-1])
+        self.textBox.setText(new_text)
+
+    def enter(self):
+        # textBox에 적힌 text 가져오기
+        text = self.textBox.toPlainText()
+        # textBox에 적힌 text를 lineEdit 설정
+        self.lineEdit.setText(text)
+        self.textBox.clear()
+        self.close()
+
+
 class FollowWindow(QMainWindow, SetBackground):  
     def __init__(self):
         super(FollowWindow, self).__init__()
@@ -100,11 +158,23 @@ class FollowWindow(QMainWindow, SetBackground):
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
         self.dateLabel.setGeometry(850, 30, 250, 100)
-        
+
+        # 텍스트 입력 필드를 터치할 때 키보드 표시
+        self.textEdit.installEventFilter(self)  # 이벤트 필터 추가
+        self.keyboard_dialog = KeyboardDialog(self.textEdit, self)
+
         # 버튼 기능 설정
         self.changeButton.clicked.connect(self.goToGuideWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
         self.addButton.clicked.connect(self.add_item)
+
+    def eventFilter(self, obj, event):
+        if obj == self.textEdit and event.type() == QEvent.MouseButtonPress:
+            self.showKeyboard()
+        return super().eventFilter(obj, event)
+    
+    def showKeyboard(self):
+        self.keyboard_dialog.exec_()
 
     def goToGuideWindow(self):
         widget.setCurrentIndex(3)
@@ -153,9 +223,9 @@ class FollowWindow(QMainWindow, SetBackground):
         self.listWidget.takeItem(row)
 
 
-class GuideWindow(QMainWindow, SetBackground):  
+class GuideWindow1F(QMainWindow, SetBackground):  
     def __init__(self):
-        super(GuideWindow, self).__init__()
+        super(GuideWindow1F, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_1f.ui", self)
 
         # init ros
@@ -171,9 +241,56 @@ class GuideWindow(QMainWindow, SetBackground):
         self.changeButton.clicked.connect(self.goToFollowWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
 
-        # go waypoint button
-        self.fish.clicked.connect(self.go_fish_btn)
-        self.meat.clicked.connect(self.go_meat_btn)
+        # # go waypoint button
+        # self.fish.clicked.connect(self.go_fish_btn)
+        # self.meat.clicked.connect(self.go_meat_btn)
+        
+    def goToFollowWindow(self):
+        widget.setCurrentIndex(2)
+
+    def openExitWindow(self):
+        exitWindow.show()
+
+    # waypoint button
+    # ====================================================== #
+    def nav_cammnd(self, msg):
+        self.nav_msg = String()
+        self.nav_msg.data = msg
+        self.ros_node.pub_navigator.publish(self.nav_msg)
+
+    def go_fish_btn(self):
+        self.nav_cammnd('go_to_fish')
+        self.statusBar().showMessage('go fish')
+
+    def go_meat_btn(self):
+        self.nav_cammnd('go_to_meat')
+        self.statusBar().showMessage('go meat')
+    # ====================================================== #
+    
+    def closeEvent(self, event):
+        rclpy.shutdown()
+
+
+class GuideWindowB1(QMainWindow, SetBackground):  
+    def __init__(self):
+        super(GuideWindowB1, self).__init__()
+        loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_b1.ui", self)
+
+        # init ros
+        self.ros_node = ROSNode()
+        self.ros_node.start()
+        
+        # 현재 날짜와 시간을 표시할 라벨 설정
+        self.dateLabel = DateTimeLabel(self)
+        self.dateLabel.setGeometry(850, 30, 250, 100)
+        
+        # 버튼 기능 설정
+        self.changeButton.clicked.connect(self.goToFollowWindow)
+        self.exitButton.clicked.connect(self.openExitWindow)
+
+        # # go waypoint button
+        # self.fish.clicked.connect(self.go_fish_btn)
+        # self.meat.clicked.connect(self.go_meat_btn)
         
     def goToFollowWindow(self):
         widget.setCurrentIndex(2)
@@ -228,12 +345,14 @@ def main(args=None):
     startWindow = StartWindow()
     cameraWindow = CameraWindow()
     followWindow = FollowWindow()
-    guideWindow = GuideWindow()
+    guideWindow1F = GuideWindow1F()
+    guideWindowB1 = GuideWindowB1()
     exitWindow = ExitWindow()
     widget.addWidget(startWindow)
     widget.addWidget(cameraWindow)
     widget.addWidget(followWindow)
-    widget.addWidget(guideWindow)
+    widget.addWidget(guideWindow1F)
+    widget.addWidget(guideWindowB1)
     widget.showFullScreen()
 
     sys.exit(app.exec_())
