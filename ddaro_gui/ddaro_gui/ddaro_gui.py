@@ -126,9 +126,7 @@ class MsgWindow(QDialog, SetBackground):
         self.noButton.clicked.connect(self.closeDialog)
     
     def showEvent(self, event):
-        global parkPose
         self.parkLabel.setText(parkPose)
-        super().showEvent(event)
 
     def goToFollowWindow(self):
         self.close()
@@ -223,7 +221,7 @@ class FollowWindow(QMainWindow, SetBackground):
         self.keyboard_dialog.exec_()
 
     def goToGuideWindow(self):
-        widget.setCurrentIndex(4)
+        widget.setCurrentIndex(guideFloor)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -273,9 +271,8 @@ class GuideWindow1F(QMainWindow, SetBackground):
     def __init__(self):
         super(GuideWindow1F, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_1f.ui", self)
-
+        
         # init ros
-        rclpy.init()
         self.ros_node = ROSNode()
         self.ros_node.start()
         
@@ -286,13 +283,22 @@ class GuideWindow1F(QMainWindow, SetBackground):
         # 버튼 기능 설정
         self.changeButton.clicked.connect(self.goToFollowWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
+        self.floorButton.clicked.connect(self.changeFloor)
 
         # # go waypoint button
         # self.fish.clicked.connect(self.go_fish_btn)
         # self.meat.clicked.connect(self.go_meat_btn)
-        
+    
+    def showEvent(self, event):
+        global guideFloor
+        guideFloor = 4
+
+
     def goToFollowWindow(self):
         widget.setCurrentIndex(3)
+
+    def changeFloor(self):
+        widget.setCurrentIndex(5)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -333,13 +339,23 @@ class GuideWindowB1(QMainWindow, SetBackground):
         # 버튼 기능 설정
         self.changeButton.clicked.connect(self.goToFollowWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
+        self.floorButton.clicked.connect(self.changeFloor)
 
         # # go waypoint button
         # self.fish.clicked.connect(self.go_fish_btn)
         # self.meat.clicked.connect(self.go_meat_btn)
-        
+    
+    def showEvent(self, event):
+        global guideFloor
+        guideFloor = 5
+
+        self.parkLabel.setText(parkPose)
+
     def goToFollowWindow(self):
         widget.setCurrentIndex(3)
+
+    def changeFloor(self):
+        widget.setCurrentIndex(4)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -384,11 +400,14 @@ class ExitWindow(QDialog, SetBackground):
 
 
 def main(args=None):
-    global widget, exitWindow, parkPose, msgWindow
+    global widget, exitWindow, parkPose, msgWindow, guideFloor
 
     app = QApplication(sys.argv)
 
     parkPose = "None"
+    guideFloor = 4
+
+    rclpy.init()
 
     widget = QtWidgets.QStackedWidget()
     startWindow = StartWindow()
