@@ -1,5 +1,4 @@
 import sys
-import os
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
@@ -92,6 +91,53 @@ class CameraWindow(QMainWindow, SetBackground):
         widget.setCurrentIndex(2)
 
 
+class ParkWindow(QMainWindow, SetBackground):  
+    def __init__(self):
+        super(ParkWindow, self).__init__()
+        loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/parkWindow.ui", self)
+
+        # 현재 날짜와 시간을 표시할 라벨 설정
+        self.dateLabel = DateTimeLabel(self)
+        self.dateLabel.setStyleSheet('font: 41 28pt "Gmarket Sans TTF";')
+        self.dateLabel.setAlignment(Qt.AlignRight)  # 우측 정렬
+        self.dateLabel.setGeometry(1610, 20, 290, 80)
+
+        # 버튼 기능 설정
+        for btn in self.findChildren(QPushButton):
+            btn.clicked.connect(self.openMsgWindow)
+
+    def openMsgWindow(self):
+        global parkPose
+
+        button = self.sender()
+        parkPose = button.text()
+        msgWindow.show()
+
+
+class MsgWindow(QDialog, SetBackground):  
+    def __init__(self):
+        super(MsgWindow, self).__init__()
+        loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/msgWindow.ui", self)
+        self.setWindowTitle("Check")
+        self.setFixedSize(self.size())
+        
+        # 버튼 기능 설정
+        self.yesButton.clicked.connect(self.goToFollowWindow)
+        self.noButton.clicked.connect(self.closeDialog)
+    
+    def showEvent(self, event):
+        global parkPose
+        self.parkLabel.setText(parkPose)
+        super().showEvent(event)
+
+    def goToFollowWindow(self):
+        self.close()
+        widget.setCurrentIndex(3)
+
+    def closeDialog(self):
+        self.close()
+
+
 class KeyboardDialog(QDialog):
     def __init__(self, lineEdit, parent=None):
         super().__init__(parent)
@@ -177,7 +223,7 @@ class FollowWindow(QMainWindow, SetBackground):
         self.keyboard_dialog.exec_()
 
     def goToGuideWindow(self):
-        widget.setCurrentIndex(3)
+        widget.setCurrentIndex(4)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -246,7 +292,7 @@ class GuideWindow1F(QMainWindow, SetBackground):
         # self.meat.clicked.connect(self.go_meat_btn)
         
     def goToFollowWindow(self):
-        widget.setCurrentIndex(2)
+        widget.setCurrentIndex(3)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -293,7 +339,7 @@ class GuideWindowB1(QMainWindow, SetBackground):
         # self.meat.clicked.connect(self.go_meat_btn)
         
     def goToFollowWindow(self):
-        widget.setCurrentIndex(2)
+        widget.setCurrentIndex(3)
 
     def openExitWindow(self):
         exitWindow.show()
@@ -323,6 +369,7 @@ class ExitWindow(QDialog, SetBackground):
         super(ExitWindow, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/exitWindow.ui", self)
         self.setWindowTitle("Exit")
+        self.setFixedSize(self.size())
         
         # 버튼 기능 설정
         self.yesButton.clicked.connect(self.goToStartWindow)
@@ -337,19 +384,24 @@ class ExitWindow(QDialog, SetBackground):
 
 
 def main(args=None):
-    global widget, exitWindow
+    global widget, exitWindow, parkPose, msgWindow
 
     app = QApplication(sys.argv)
+
+    parkPose = "None"
 
     widget = QtWidgets.QStackedWidget()
     startWindow = StartWindow()
     cameraWindow = CameraWindow()
+    parkWindow = ParkWindow()
+    msgWindow = MsgWindow()
     followWindow = FollowWindow()
     guideWindow1F = GuideWindow1F()
     guideWindowB1 = GuideWindowB1()
     exitWindow = ExitWindow()
     widget.addWidget(startWindow)
     widget.addWidget(cameraWindow)
+    widget.addWidget(parkWindow)
     widget.addWidget(followWindow)
     widget.addWidget(guideWindow1F)
     widget.addWidget(guideWindowB1)
