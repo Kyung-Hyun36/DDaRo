@@ -392,6 +392,13 @@ class ExitWindow(QDialog, SetBackground):
         self.noButton.clicked.connect(self.closeDialog)
     
     def goToStartWindow(self):
+        global parkPose, guideFloor
+
+        parkPose = "None"
+        guideFloor = 4
+        followWindow.textEdit.clear()
+        followWindow.listWidget.clear()
+
         self.close()
         widget.setCurrentIndex(0)
 
@@ -400,7 +407,7 @@ class ExitWindow(QDialog, SetBackground):
 
 
 def main(args=None):
-    global widget, exitWindow, parkPose, msgWindow, guideFloor
+    global widget, exitWindow, parkPose, msgWindow, guideFloor, followWindow
 
     app = QApplication(sys.argv)
 
