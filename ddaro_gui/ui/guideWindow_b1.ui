@@ -170,7 +170,7 @@
      <string>주차 요금 정산</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="parkGuideButton">
     <property name="geometry">
      <rect>
       <x>1550</x>
@@ -265,7 +265,7 @@
    <zorder>label</zorder>
    <zorder>label_3</zorder>
    <zorder>pushButton</zorder>
-   <zorder>pushButton_2</zorder>
+   <zorder>parkGuideButton</zorder>
    <zorder>floorButton</zorder>
    <zorder>warning_4</zorder>
    <zorder>parkLabel</zorder>

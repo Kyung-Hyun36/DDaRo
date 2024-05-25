@@ -285,14 +285,16 @@ class GuideWindow1F(QMainWindow, SetBackground):
         self.exitButton.clicked.connect(self.openExitWindow)
         self.floorButton.clicked.connect(self.changeFloor)
 
-        # # go waypoint button
-        # self.fish.clicked.connect(self.go_fish_btn)
-        # self.meat.clicked.connect(self.go_meat_btn)
+        # go waypoint button
+        self.fish.clicked.connect(self.go_fish_btn)
+        self.meat.clicked.connect(self.go_meat_btn)
+        self.vegetable.clicked.connect(self.go_vegetable_btn)
+        self.daiso.clicked.connect(self.go_daiso_btn)
+        self.counter.clicked.connect(self.go_counter_btn)
     
     def showEvent(self, event):
         global guideFloor
         guideFloor = 4
-
 
     def goToFollowWindow(self):
         widget.setCurrentIndex(3)
@@ -317,6 +319,18 @@ class GuideWindow1F(QMainWindow, SetBackground):
     def go_meat_btn(self):
         self.nav_cammnd('go_to_meat')
         self.statusBar().showMessage('go meat')
+
+    def go_vegetable_btn(self):
+        self.nav_cammnd('go_to_vegetable')
+        self.statusBar().showMessage('go vegetable')
+    
+    def go_daiso_btn(self):
+        self.nav_cammnd('go_to_daiso')
+        self.statusBar().showMessage('go daiso')
+
+    def go_counter_btn(self):
+        self.nav_cammnd('go_to_counter')
+        self.statusBar().showMessage('go counter')
     # ====================================================== #
     
     def closeEvent(self, event):
@@ -340,16 +354,18 @@ class GuideWindowB1(QMainWindow, SetBackground):
         self.changeButton.clicked.connect(self.goToFollowWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
         self.floorButton.clicked.connect(self.changeFloor)
-
-        # # go waypoint button
-        # self.fish.clicked.connect(self.go_fish_btn)
-        # self.meat.clicked.connect(self.go_meat_btn)
+        self.parkGuideButton.clicked.connect(self.go_parkPose_btn)
     
     def showEvent(self, event):
         global guideFloor
         guideFloor = 5
 
         self.parkLabel.setText(parkPose)
+
+        if parkPose == "주차 안함":
+            self.parkGuideButton.setEnabled(False)
+        else:
+            self.parkGuideButton.setEnabled(True)
 
     def goToFollowWindow(self):
         widget.setCurrentIndex(3)
@@ -367,13 +383,10 @@ class GuideWindowB1(QMainWindow, SetBackground):
         self.nav_msg.data = msg
         self.ros_node.pub_navigator.publish(self.nav_msg)
 
-    def go_fish_btn(self):
-        self.nav_cammnd('go_to_fish')
-        self.statusBar().showMessage('go fish')
-
-    def go_meat_btn(self):
-        self.nav_cammnd('go_to_meat')
-        self.statusBar().showMessage('go meat')
+    def go_parkPose_btn(self):
+        command = 'go_to_' + parkPose
+        self.nav_cammnd(command)
+        self.statusBar().showMessage(command)
     # ====================================================== #
     
     def closeEvent(self, event):

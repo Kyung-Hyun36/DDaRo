@@ -27,8 +27,16 @@ class NavigatorNode(Node):
         self.result_future = None
 
         self.waypoint = [
-            [-2.0, -3.0],
-            [2.0, -3.0],
+            [-1.0, -2.0],   # fish
+            [1.0, -2.0],    # meat
+            [-2.0, -2.0],    # vegetable
+            [2.0, -2.0],    # daiso
+            [-3.0, -2.0],    # service
+            [3.0, -2.0],    # B01
+            [-1.0, -1.0],    # B05
+            [1.0, -1.0],    # B10
+            [-2.0, -1.0],    # B15
+            [2.0, -1.0],    # B20
         ]
 
         # feedback을 이용한 진행률 계산 및 출력
@@ -61,6 +69,14 @@ class NavigatorNode(Node):
         self.control_dict = {
             'go_to_fish': lambda: self.goToPose(0),
             'go_to_meat': lambda: self.goToPose(1),
+            'go_to_vegetable': lambda: self.goToPose(2),
+            'go_to_daiso': lambda: self.goToPose(3),
+            'go_to_service': lambda: self.goToPose(4),
+            'go_to_B01': lambda: self.goToPose(5),
+            'go_to_B05': lambda: self.goToPose(6),
+            'go_to_B10': lambda: self.goToPose(7),
+            'go_to_B15': lambda: self.goToPose(8),
+            'go_to_B20': lambda: self.goToPose(9),
         }
 
     def navigatorCallback(self, msg):
