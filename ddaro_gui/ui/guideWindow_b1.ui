@@ -149,32 +149,11 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>1550</x>
-      <y>290</y>
-      <width>291</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Gmarket Sans TTF</family>
-      <pointsize>20</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>주차 요금 정산</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="parkGuideButton">
     <property name="geometry">
      <rect>
       <x>1550</x>
-      <y>450</y>
+      <y>290</y>
       <width>291</width>
       <height>111</height>
      </rect>
@@ -264,7 +243,6 @@
    <zorder>exitButton</zorder>
    <zorder>label</zorder>
    <zorder>label_3</zorder>
-   <zorder>pushButton</zorder>
    <zorder>parkGuideButton</zorder>
    <zorder>floorButton</zorder>
    <zorder>warning_4</zorder>
