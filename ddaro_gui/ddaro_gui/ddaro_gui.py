@@ -85,10 +85,6 @@ class CameraWindow(QMainWindow, SetBackground):
 
         self.human_frame.setAttribute(Qt.WA_TranslucentBackground)
         self.human_frame.setStyleSheet("background-color: rgba(0, 0, 0, 0);")
-
-        # init ros
-        self.ros_node = ROSNode()
-        self.ros_node.start()
         
         # 버튼 기능 설정
         self.backButton.clicked.connect(self.goToStartWindow)
@@ -98,7 +94,7 @@ class CameraWindow(QMainWindow, SetBackground):
         self.timer.start(30)
 
     def update_frame(self):
-        frame = self.ros_node.current_frame
+        frame = ros_node.current_frame
         if frame is not None:
             # Convert the frame to RGB format
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -303,10 +299,6 @@ class GuideWindow1F(QMainWindow, SetBackground):
         super(GuideWindow1F, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_1f.ui", self)
         
-        # init ros
-        self.ros_node = ROSNode()
-        self.ros_node.start()
-        
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
         self.dateLabel.setGeometry(850, 30, 250, 100)
@@ -342,8 +334,8 @@ class GuideWindow1F(QMainWindow, SetBackground):
 
     def updateImagePosition(self):
         pass
-        x = int(self.ros_node.current_pose_x)
-        y = int(self.ros_node.current_pose_y)
+        x = int(ros_node.current_pose_x)
+        y = int(ros_node.current_pose_y)
         self.ddaroImage.move(x, y)
 
     # waypoint button
@@ -351,7 +343,7 @@ class GuideWindow1F(QMainWindow, SetBackground):
     def nav_cammnd(self, msg):
         self.nav_msg = String()
         self.nav_msg.data = msg
-        self.ros_node.pub_navigator.publish(self.nav_msg)
+        ros_node.pub_navigator.publish(self.nav_msg)
 
     def go_fish_btn(self):
         self.nav_cammnd('go_to_fish')
@@ -382,10 +374,6 @@ class GuideWindowB1(QMainWindow, SetBackground):
     def __init__(self):
         super(GuideWindowB1, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_b1.ui", self)
-
-        # init ros
-        # self.ros_node = ROSNode()
-        # self.ros_node.start()
         
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
@@ -422,7 +410,7 @@ class GuideWindowB1(QMainWindow, SetBackground):
     def nav_cammnd(self, msg):
         self.nav_msg = String()
         self.nav_msg.data = msg
-        # self.ros_node.pub_navigator.publish(self.nav_msg)
+        ros_node.pub_navigator.publish(self.nav_msg)
 
     def go_parkPose_btn(self):
         command = 'go_to_' + parkPose
@@ -461,7 +449,7 @@ class ExitWindow(QDialog, SetBackground):
 
 
 def main(args=None):
-    global widget, exitWindow, parkPose, msgWindow, guideFloor, followWindow
+    global widget, exitWindow, parkPose, msgWindow, guideFloor, followWindow, ros_node
 
     app = QApplication(sys.argv)
 
@@ -469,6 +457,8 @@ def main(args=None):
     guideFloor = 4
 
     rclpy.init()
+    ros_node = ROSNode()
+    ros_node.start()
 
     widget = QtWidgets.QStackedWidget()
     startWindow = StartWindow()
