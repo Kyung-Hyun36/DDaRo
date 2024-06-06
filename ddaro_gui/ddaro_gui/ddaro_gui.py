@@ -3,9 +3,11 @@ from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer, QDateTime, Qt, QLocale, QVariantAnimation, QEasingCurve, QEvent
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QImage, QPixmap
 
 import rclpy
+from cv_bridge import CvBridge
+import cv2
 from std_msgs.msg import String
 from ddaro_gui.qt_to_ros import ROSNode
 from hangul_utils import join_jamos, split_syllables
@@ -80,15 +82,44 @@ class CameraWindow(QMainWindow, SetBackground):
     def __init__(self):
         super(CameraWindow, self).__init__()
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/cameraWindow.ui", self)
+
+        self.human_frame.setAttribute(Qt.WA_TranslucentBackground)
+        self.human_frame.setStyleSheet("background-color: rgba(0, 0, 0, 0);")
+
+        # init ros
+        self.ros_node = ROSNode()
+        self.ros_node.start()
         
         # 버튼 기능 설정
         self.backButton.clicked.connect(self.goToStartWindow)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_frame)
+        self.timer.start(30)
+
+    def update_frame(self):
+        frame = self.ros_node.current_frame
+        if frame is not None:
+            # Convert the frame to RGB format
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgb_frame.shape
+            bytes_per_line = ch * w
+
+            # Convert the frame to QImage
+            qimg = QImage(rgb_frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(qimg)
+
+            # Display the QImage in the QLabel
+            self.camera.setPixmap(pixmap)
 
     def goToStartWindow(self):
         widget.setCurrentIndex(0)
 
     def mousePressEvent(self, event):
         widget.setCurrentIndex(2)
+
+    def closeEvent(self, event):
+        rclpy.shutdown()
 
 
 class ParkWindow(QMainWindow, SetBackground):  

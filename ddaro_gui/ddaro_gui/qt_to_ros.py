@@ -4,6 +4,8 @@ from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from std_msgs.msg import String
 from std_msgs.msg import Int32
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QThread
@@ -25,6 +27,11 @@ class ROSNode(QThread):
         self.current_pose_x = 1.0
         self.current_pose_y = -4.0
 
+        self.subscription = self.node.create_subscription(Image, '/camera/camera/color/image_raw', self.listener_callback, 10)
+        self.subscription  # prevent unused variable warning
+        self.br = CvBridge()
+        self.current_frame = None
+
         self.pub_navigator = self.node.create_publisher(String, 'navigator', 10)
 
         while rclpy.ok() and self._is_running:
@@ -38,3 +45,6 @@ class ROSNode(QThread):
     def pose_callback(self, msg):
         self.current_pose_x = msg.pose.pose.position.x
         self.current_pose_y = msg.pose.pose.position.y
+
+    def listener_callback(self, msg):
+        self.current_frame = self.br.imgmsg_to_cv2(msg, 'bgr8')
