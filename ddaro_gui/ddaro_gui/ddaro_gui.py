@@ -279,7 +279,7 @@ class GuideWindow1F(QMainWindow, SetBackground):
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
         self.dateLabel.setGeometry(850, 30, 250, 100)
-        
+
         # 버튼 기능 설정
         self.changeButton.clicked.connect(self.goToFollowWindow)
         self.exitButton.clicked.connect(self.openExitWindow)
@@ -291,6 +291,10 @@ class GuideWindow1F(QMainWindow, SetBackground):
         self.vegetable.clicked.connect(self.go_vegetable_btn)
         self.daiso.clicked.connect(self.go_daiso_btn)
         self.counter.clicked.connect(self.go_counter_btn)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.updateImagePosition)
+        self.timer.start(500)
     
     def showEvent(self, event):
         global guideFloor
@@ -304,6 +308,12 @@ class GuideWindow1F(QMainWindow, SetBackground):
 
     def openExitWindow(self):
         exitWindow.show()
+
+    def updateImagePosition(self):
+        pass
+        x = int(self.ros_node.current_pose_x)
+        y = int(self.ros_node.current_pose_y)
+        self.ddaroImage.move(x, y)
 
     # waypoint button
     # ====================================================== #
@@ -343,8 +353,8 @@ class GuideWindowB1(QMainWindow, SetBackground):
         loadUi("/home/hyun/ros2_ws/src/ddaro/ddaro_gui/ui/guideWindow_b1.ui", self)
 
         # init ros
-        self.ros_node = ROSNode()
-        self.ros_node.start()
+        # self.ros_node = ROSNode()
+        # self.ros_node.start()
         
         # 현재 날짜와 시간을 표시할 라벨 설정
         self.dateLabel = DateTimeLabel(self)
@@ -381,7 +391,7 @@ class GuideWindowB1(QMainWindow, SetBackground):
     def nav_cammnd(self, msg):
         self.nav_msg = String()
         self.nav_msg.data = msg
-        self.ros_node.pub_navigator.publish(self.nav_msg)
+        # self.ros_node.pub_navigator.publish(self.nav_msg)
 
     def go_parkPose_btn(self):
         command = 'go_to_' + parkPose

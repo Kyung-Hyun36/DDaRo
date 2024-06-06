@@ -22,7 +22,8 @@ class ROSNode(QThread):
 
         self.sub_pose = self.node.create_subscription(PoseWithCovarianceStamped, 
         'amcl_pose', self.pose_callback, 10)
-        self.current_pose = None
+        self.current_pose_x = 1.0
+        self.current_pose_y = -4.0
 
         self.pub_navigator = self.node.create_publisher(String, 'navigator', 10)
 
@@ -35,4 +36,5 @@ class ROSNode(QThread):
         self.set_vel = msg
 
     def pose_callback(self, msg):
-        self.current_pose = msg.pose.pose
+        self.current_pose_x = msg.pose.pose.position.x
+        self.current_pose_y = msg.pose.pose.position.y
