@@ -31,7 +31,7 @@ class NavigatorNode(Node):
             [1.0, -2.0],    # meat
             [-2.0, -2.0],    # vegetable
             [2.0, -2.0],    # daiso
-            [-3.0, -2.0],    # service
+            [-3.0, -2.0],    # counter
             [3.0, -2.0],    # B01
             [-1.0, -1.0],    # B05
             [1.0, -1.0],    # B10
@@ -71,7 +71,7 @@ class NavigatorNode(Node):
             'go_to_meat': lambda: self.goToPose(1),
             'go_to_vegetable': lambda: self.goToPose(2),
             'go_to_daiso': lambda: self.goToPose(3),
-            'go_to_service': lambda: self.goToPose(4),
+            'go_to_counter': lambda: self.goToPose(4),
             'go_to_B01': lambda: self.goToPose(5),
             'go_to_B05': lambda: self.goToPose(6),
             'go_to_B10': lambda: self.goToPose(7),
