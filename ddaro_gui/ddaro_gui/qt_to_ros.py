@@ -41,6 +41,7 @@ class ROSNode(QThread):
 
     def cmd_vel_callback(self, msg):
         self.set_vel = msg
+        self.abc = msg
 
     def pose_callback(self, msg):
         self.current_pose_x = msg.pose.pose.position.x
